@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg,#fbfcfe 0%, #e6f7f4 50%);
+            color: #123;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        /* Animated background shapes */
+        .bg-shape {
+            position: fixed;
+            border-radius: 50%;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .shape-1 {
+            width: 400px;
+            height: 400px;
+            background: white;
+            top: -100px;
+            left: -100px;
+            animation: float 18s ease-in-out infinite;
+        }
+
+        .shape-2 {
+            width: 250px;
+            height: 250px;
+            background: white;
+            bottom: -50px;
+            right: -50px;
+            animation: float 22s ease-in-out infinite reverse;
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 150px;
+            background: white;
+            top: 50%;
+            right: 10%;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(30px); }
+        }
+
+        .signup-container {
+            background: linear-gradient(180deg, rgba(255,255,255,0.99), rgba(250,251,252,0.99));
+            padding: 44px 36px;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(20,35,50,0.08);
+            width: 100%;
+            max-width: 520px;
+            animation: slideUp 0.8s cubic-bezier(.22,1,.36,1);
+            z-index: 10;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            color: #223;
+            text-align: center;
+            margin-bottom: 28px;
+            font-size: 26px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            animation: fadeInDown 0.8s ease-out 0.2s backwards;
+        }
+
+        .app-icon {
+            width: 38px;
+            height: 38px;
+            display: inline-block;
+            border-radius: 8px;
+            background: linear-gradient(180deg,#4fb7a4,#2b9e8a);
+            box-shadow: 0 6px 18px rgba(43,158,138,0.28);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .app-icon svg { width: 20px; height: 20px; fill: #fff; }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        form {
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        p {
+            margin-bottom: 20px;
+            animation: slideInLeft 0.6s ease-out backwards;
+        }
+
+        p:nth-child(1) { animation-delay: 0.5s; }
+        p:nth-child(2) { animation-delay: 0.6s; }
+        p:nth-child(3) { animation-delay: 0.7s; }
+        p:nth-child(4) { animation-delay: 0.8s; }
+        p:nth-child(5) { animation-delay: 0.9s; }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="tel"],
+        input[type="number"],
+        select, /* Added select here for CSS */
+        textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 18px;
+            align-items: start;
+        }
+
+        .form-row p {
+            margin-bottom: 0;
+        }
+
+        .phone-section {
+            border-top: 2px solid #e9f0ef;
+            padding-top: 22px;
+            margin-top: 20px;
+        }
+
+        .login-link {
+            display: block;
+            text-align: center;
+            margin-top: 14px;
+            color: #2b9e8a;
+            font-size: 14px;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            animation: fadeIn 0.8s ease-out 1.2s backwards;
+        }
+
+        .login-link:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        select:focus, /* Added select here for focus state */
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input[type="text"]:hover,
+        input[type="email"]:hover,
+        input[type="password"]:hover,
+        select:hover, /* Added select here for hover state */
+        textarea:hover {
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px 16px;
+            background: linear-gradient(180deg,#2b9e8a 0%, #1f7f68 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .16s ease, box-shadow .16s ease;
+            margin-top: 18px;
+            position: relative;
+            overflow: hidden;
+            animation: buttonPulse 0.7s ease-out 0.6s backwards;
+        }
+
+        @keyframes buttonPulse {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: left 0.5s ease;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        /* Helptext styling */
+        .helptext {
+            font-size: 12px;
+            color: #777;
+            margin-top: 6px;
+            display: block;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Form field error styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .field-error {
+            color: #c33;
+            font-size: 12px;
+            margin-top: 4px;
+            display: block;
+            animation: slideInLeft 0.4s ease-out;
+        }
+
+        ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        /* Error message styling */
+        .errorlist {
+            list-style: none;
+            margin-bottom: 20px;
+            animation: shake 0.5s ease-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .errorlist li {
+            background: #fee;
+            color: #c33;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 4px solid #c33;
+            margin-bottom: 10px;
+            font-size: 14px;
+            animation: slideInLeft 0.4s ease-out;
+        }
+
+        /* Success message styling */
+        .success {
+            background: #efe;
+            color: #3c3;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 4px solid #3c3;
+            margin-bottom: 20px;
+            font-size: 14px;
+            animation: slideInLeft 0.4s ease-out;
+        }
+
+        /* Top center brand title */
+        .page-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 800;
+            color: #2b9e8a;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease-out 0.1s backwards;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .signup-container {
+                padding: 40px 25px;
+                margin: 20px;
+            }
+
+            .page-title {
+                font-size: 26px;
+                margin-bottom: 28px;
+            }
+
+            h2 {
+                font-size: 24px;
+                margin-bottom: 30px;
+            }
+
+            button {
+                padding: 12px;
+                font-size: 15px;
+            }
+
+            p {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a class="page-brand" href="{% url 'index' %}">ApnaGhar</a>
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+    <div class="skyline" aria-hidden="true"></div>
+    <div class="pin" style="left:68%; top:22%; background:#ff7a59" aria-hidden="true"></div>
+    <div class="pin" style="left:82%; top:40%; background:#ffd166; animation-delay:1.2s" aria-hidden="true"></div>
+
+    <h1 class="page-title">ApnaGhar</h1>
+    
+    <div class="signup-container">
+        <h2>
+            <span class="app-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3 7v13a1 1 0 0 0 1 1h5v-7h6v7h5a1 1 0 0 0 1-1V7l-9-5z"/></svg>
+            </span>
+            Sign Up
+        </h2>
+        <form method="post" id="signupForm" novalidate>
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+            <div class="errorlist">
+                {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="form-row">
+                <p class="form-group">
+                    <label for="{{ form.first_name.id_for_label }}">First Name *</label>
+                    {{ form.first_name }}
+                    {% if form.first_name.errors %}
+                        <span class="field-error">{{ form.first_name.errors.0 }}</span>
+                    {% endif %}
+                </p>
+                <p class="form-group">
+                    <label for="{{ form.last_name.id_for_label }}">Last Name *</label>
+                    {{ form.last_name }}
+                    {% if form.last_name.errors %}
+                        <span class="field-error">{{ form.last_name.errors.0 }}</span>
+                    {% endif %}
+                </p>
+            </div>
+            
+                <!-- User Role Selection -->
+                <div class="form-group" style="margin-bottom:18px;">
+                    <label style="font-weight:700; color:#555; margin-bottom:8px; display:block;">I am a</label>
+                    <!-- Render the underlying select (hidden) so Django receives the value -->
+                    <div style="display:none;">{{ form.user_type }}</div>
+
+                    <!-- Segmented control for roles -->
+                    <div id="roleSwitch" style="display:flex; gap:8px;">
+                        <button type="button" class="role-btn" data-value="landlord">Landlord</button>
+                        <button type="button" class="role-btn" data-value="seller">Seller</button>
+                        <button type="button" class="role-btn" data-value="client">Tenant / Buyer</button>
+                    </div>
+                    <small class="helptext">Choose whether you're listing a property or searching for one.</small>
+                </div>
+
+            <p class="form-group">
+                <label for="{{ form.email.id_for_label }}">Email Address *</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <span class="field-error">{{ form.email.errors.0 }}</span>
+                {% endif %}
+            </p>
+
+            <p class="form-group">
+                <label for="{{ form.username.id_for_label }}">Username *</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <span class="field-error">{{ form.username.errors.0 }}</span>
+                {% endif %}
+            </p>
+
+            <p class="form-group">
+                <label for="{{ form.password1.id_for_label }}">Password *</label>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                    <span class="field-error">{{ form.password1.errors.0 }}</span>
+                {% else %}
+                    {% if form.password1.help_text %}
+                    <span class="helptext">{{ form.password1.help_text|safe }}</span>
+                    {% endif %}
+                {% endif %}
+            </p>
+
+            <p class="form-group">
+                <label for="{{ form.password2.id_for_label }}">Confirm Password *</label>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                    <span class="field-error">{{ form.password2.errors.0 }}</span>
+                {% endif %}
+            </p>
+
+            <!-- Contact number (now from form) -->
+            <div class="phone-section">
+                <p class="form-group">
+                    <label for="{{ form.contact_number.id_for_label }}">Contact Number</label>
+                    {{ form.contact_number }}
+                    {% if form.contact_number.errors %}
+                        <span class="field-error">{{ form.contact_number.errors.0 }}</span>
+                    {% endif %}
+                </p>
+            </div>
+
+            <!-- Role-specific fields -->
+            <div id="landlordFields" style="display:none;">
+                <p class="form-group">
+                    <label for="{{ form.company_name.id_for_label }}">Company / Agency (optional)</label>
+                    {{ form.company_name }}
+                    {% if form.company_name.errors %}
+                        <span class="field-error">{{ form.company_name.errors.0 }}</span>
+                    {% endif %}
+                </p>
+                <p class="form-group">
+                    <label for="{{ form.properties_count.id_for_label }}">Number of Properties (optional)</label>
+                    {{ form.properties_count }}
+                    {% if form.properties_count.errors %}
+                        <span class="field-error">{{ form.properties_count.errors.0 }}</span>
+                    {% endif %}
+                </p>
+            </div>
+
+            <div id="clientFields" style="display:none;">
+                <p class="form-group">
+                    <label for="{{ form.budget.id_for_label }}">Estimated Budget (optional)</label>
+                    {{ form.budget }}
+                    {% if form.budget.errors %}
+                        <span class="field-error">{{ form.budget.errors.0 }}</span>
+                    {% endif %}
+                </p>
+                <p class="form-group">
+                    <label for="{{ form.move_in_date.id_for_label }}">Preferred Move-in Date (optional)</label>
+                    {{ form.move_in_date }}
+                    {% if form.move_in_date.errors %}
+                        <span class="field-error">{{ form.move_in_date.errors.0 }}</span>
+                    {% endif %}
+                </p>
+            </div>
+
+            <button type="submit" id="signupBtn">Create Account</button>
+            <a href="/login/" class="login-link">Already have an account? Log in</a>
+        </form>
+    </div>
+
+    <script>
+        // Apply styling to Django form fields (Updated to include 'select')
+        const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], input[type="tel"], input[type="number"], select');
+        
+        inputs.forEach(input => {
+            // Add form styling classes
+            input.style.width = '100%';
+            input.style.padding = '14px 16px';
+            input.style.border = '2px solid #e0e0e0';
+            input.style.borderRadius = '10px';
+            input.style.fontSize = '16px';
+            input.style.background = '#f8f9fa';
+            input.style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+            input.style.transition = 'all 0.3s ease';
+            input.style.boxSizing = 'border-box';
+            input.style.marginBottom = '8px';
+            
+            // Handle focus
+            input.addEventListener('focus', function() {
+                this.style.borderColor = '#2b9e8a';
+                this.style.background = 'white';
+                this.style.boxShadow = '0 8px 24px rgba(43,158,138,0.08)';
+                this.style.transform = 'translateY(-1px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.style.borderColor = '#e0e0e0';
+                this.style.background = '#f8f9fa';
+                this.style.boxShadow = 'none';
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Form submission
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            // Remove any previous error styling
+            inputs.forEach(input => {
+                input.classList.remove('error');
+            });
+
+            // Let Django handle validation on the server
+            // This form will submit normally
+        });
+
+        // Role selector behavior: sync segmented control with Django select
+        (function() {
+            const roleBtns = document.querySelectorAll('.role-btn');
+            const select = document.querySelector('select[name="user_type"]');
+            if (!select) return; // if form doesn't include user_type, skip
+
+            // Initialize based on select value (if any)
+            const initVal = select.value || 'client';
+            roleBtns.forEach(b => {
+                if (b.dataset.value === initVal) b.classList.add('active-role');
+            });
+
+            // Styling for active role button
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .role-btn { padding:10px 14px; border-radius:10px; background:#f3f7f6; border:1px solid #e6eef0; cursor:pointer; font-weight:700; color:#2b9e8a; }
+                .role-btn.active-role { background: linear-gradient(135deg,#2b9e8a,#1f7f68); color:white; box-shadow:0 8px 20px rgba(43,158,138,0.12); transform:translateY(-2px); }
+                .role-btn:focus { outline:none; }
+            `;
+            document.head.appendChild(style);
+
+            function updateRoleVisibility(role) {
+                const landlord = document.getElementById('landlordFields');
+                const client = document.getElementById('clientFields');
+                if (!landlord || !client) return;
+                if (role === 'landlord' || role === 'seller') {
+                    landlord.style.display = 'block';
+                    client.style.display = 'none';
+                } else {
+                    landlord.style.display = 'none';
+                    client.style.display = 'block';
+                }
+            }
+
+            roleBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // mark active
+                    roleBtns.forEach(b => b.classList.remove('active-role'));
+                    this.classList.add('active-role');
+
+                    // set select value so Django receives it
+                    select.value = this.dataset.value;
+                    updateRoleVisibility(this.dataset.value);
+                });
+            });
+
+            // Initialize visibility
+            updateRoleVisibility(initVal);
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,451 @@
+{% extends 'static/static.html' %}
+
+{% block title %}My Profile - ApnaGhar{% endblock %}
+
+{% block links %}
+<style>
+    .profile-container {
+        background: linear-gradient(135deg, #f5fffe 0%, #f0fdfb 100%);
+        min-height: calc(100vh - 100px);
+        padding: 40px 20px;
+    }
+
+    .profile-wrapper {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .profile-header {
+        text-align: center;
+        margin-bottom: 40px;
+        animation: fadeInDown 0.6s ease;
+    }
+
+    .profile-header h1 {
+        font-size: 36px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #2b9e8a, #1f7f68);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0 0 10px 0;
+    }
+
+    .profile-header p {
+        color: #666;
+        font-size: 14px;
+        margin: 0;
+    }
+
+    .profile-cards {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 30px;
+    }
+
+    .profile-card {
+        background: white;
+        border-radius: 16px;
+        padding: 28px;
+        box-shadow: 0 8px 32px rgba(43, 158, 138, 0.08);
+        border: 1px solid #e8f5f3;
+        transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+        animation: fadeInUp 0.6s ease;
+    }
+
+    .profile-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 48px rgba(43, 158, 138, 0.15);
+        border-color: #2b9e8a;
+    }
+
+    .card-avatar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #2b9e8a, #1f7f68);
+        border-radius: 20px;
+        padding: 40px;
+        color: white;
+        text-align: center;
+        grid-column: 1;
+        grid-row: 1 / 3;
+    }
+
+    .card-avatar i {
+        font-size: 120px;
+        margin-bottom: 20px;
+        opacity: 0.95;
+    }
+
+    .card-avatar .username {
+        font-size: 18px;
+        font-weight: 700;
+        margin-top: 12px;
+    }
+
+    .card-avatar .role-badge {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.25);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-top: 12px;
+        backdrop-filter: blur(10px);
+    }
+
+    .card-info {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .card-details {
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    .info-group {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-bottom: 12px;
+    }
+
+    .info-item:not(:last-child) {
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #a9d7cc, #7ec9b8);
+        border-radius: 10px;
+        color: white;
+        font-size: 18px;
+    }
+
+    .info-content {
+        flex: 1;
+    }
+
+    .info-label {
+        font-size: 12px;
+        color: #999;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 2px;
+    }
+
+    .info-value {
+        font-size: 16px;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .card-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #2b9e8a;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .card-title i {
+        font-size: 18px;
+    }
+
+    .profile-actions {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        margin-top: 30px;
+        animation: fadeInUp 0.8s ease 0.2s backwards;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #2b9e8a 0%, #1f7f68 100%);
+        color: white;
+        padding: 14px 32px;
+        border: none;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 6px 20px rgba(43, 158, 138, 0.2);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(43, 158, 138, 0.35);
+    }
+
+    .btn-secondary {
+        background: white;
+        color: #2b9e8a;
+        padding: 14px 32px;
+        border: 2px solid #2b9e8a;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-secondary:hover {
+        background: #f5fffe;
+        transform: translateY(-2px);
+    }
+
+    .no-data {
+        text-align: center;
+        color: #999;
+        padding: 20px;
+        font-size: 14px;
+    }
+
+    .empty-state {
+        background: white;
+        border-radius: 16px;
+        padding: 40px;
+        text-align: center;
+        border: 2px dashed #e0e0e0;
+    }
+
+    .empty-state i {
+        font-size: 48px;
+        color: #a9d7cc;
+        margin-bottom: 16px;
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .profile-cards {
+            grid-template-columns: 1fr;
+        }
+
+        .card-avatar {
+            grid-column: 1;
+            grid-row: auto;
+            margin-bottom: 20px;
+        }
+
+        .card-info {
+            grid-column: 1;
+            grid-row: auto;
+        }
+
+        .card-details {
+            grid-column: 1;
+            grid-row: auto;
+        }
+
+        .profile-header h1 {
+            font-size: 28px;
+        }
+
+        .profile-actions {
+            flex-direction: column;
+        }
+
+        .btn-primary, .btn-secondary {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-wrapper">
+        <!-- Header -->
+        <div class="profile-header">
+            <h1>Welcome Back!</h1>
+            <p>Manage your ApnaGhar profile and settings</p>
+        </div>
+
+        <!-- Profile Cards Grid -->
+        <div class="profile-cards">
+            <!-- Avatar Card -->
+            <div class="card-avatar">
+                <i class="fa fa-user-circle"></i>
+                <div class="username">{{ user.first_name|default:user.username }}</div>
+                {% if profile %}
+                    <div class="role-badge">
+                        <i class="fa fa-certificate"></i> {{ profile.get_user_type_display|upper }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Basic Info Card -->
+            <div class="profile-card card-info">
+                <div class="card-title">
+                    <i class="fa fa-id-card-o"></i> Account Details
+                </div>
+                <div class="info-group">
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa fa-user"></i></div>
+                        <div class="info-content">
+                            <div class="info-label">Username</div>
+                            <div class="info-value">{{ user.username }}</div>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa fa-envelope"></i></div>
+                        <div class="info-content">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">{{ user.email }}</div>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fa fa-calendar"></i></div>
+                        <div class="info-content">
+                            <div class="info-label">Member Since</div>
+                            <div class="info-value">{{ user.date_joined|date:"b d, Y" }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Details Card -->
+            <div class="profile-card card-details">
+                <div class="card-title">
+                    <i class="fa fa-briefcase"></i> Profile Information
+                </div>
+                {% if profile %}
+                    <div class="info-group">
+                        {% if profile.contact_number %}
+                            <div class="info-item">
+                                <div class="info-icon"><i class="fa fa-phone"></i></div>
+                                <div class="info-content">
+                                    <div class="info-label">Contact</div>
+                                    <div class="info-value">{{ profile.contact_number }}</div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if profile.company_name %}
+                            <div class="info-item">
+                                <div class="info-icon"><i class="fa fa-building"></i></div>
+                                <div class="info-content">
+                                    <div class="info-label">Company</div>
+                                    <div class="info-value">{{ profile.company_name }}</div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if profile.properties_count %}
+                            <div class="info-item">
+                                <div class="info-icon"><i class="fa fa-home"></i></div>
+                                <div class="info-content">
+                                    <div class="info-label">Properties</div>
+                                    <div class="info-value">{{ profile.properties_count }}</div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if profile.budget %}
+                            <div class="info-item">
+                                <div class="info-icon"><i class="fa fa-dollar"></i></div>
+                                <div class="info-content">
+                                    <div class="info-label">Budget</div>
+                                    <div class="info-value">₹{{ profile.budget|floatformat:0 }}</div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if profile.move_in_date %}
+                            <div class="info-item">
+                                <div class="info-icon"><i class="fa fa-calendar"></i></div>
+                                <div class="info-content">
+                                    <div class="info-label">Move-in Date</div>
+                                    <div class="info-value">{{ profile.move_in_date|date:"M d, Y" }}</div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if not profile.contact_number and not profile.company_name and not profile.properties_count and not profile.budget and not profile.move_in_date %}
+                            <div class="no-data">
+                                <i class="fa fa-info-circle"></i> Complete your profile during signup or contact support.
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fa fa-inbox"></i>
+                        <p>No profile information found. You can update your details during signup or in account settings.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="profile-actions">
+            <a href="{% url 'edit_profile' %}" class="btn-primary">
+                <i class="fa fa-edit"></i> Edit Profile
+            </a>
+            {% if profile.user_type == 'landlord' or profile.user_type == 'seller' %}
+                <a href="{% url 'my_properties' %}" class="btn-primary">
+                    <i class="fa fa-building"></i> My Properties
+                </a>
+            {% endif %}
+            <a href="{% url 'browse_all' %}" class="btn-primary">
+                <i class="fa fa-list"></i> Browse Properties
+            </a>
+            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" class="btn-secondary">
+        <i class="fa fa-sign-out"></i> Logout
+    </button>
+</form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+    <title>{{ apt.name }} | ApnaGhar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            min-height: 100vh;
+        }
+        .apt-container {
+            width: 100vw;
+            min-height: 100vh;
+            margin: 0;
+            background: white;
+            border-radius: 0;
+            box-shadow: none;
+            padding: 0;
+            overflow: auto;
+            animation: fadeInUp 0.8s cubic-bezier(.22,1,.36,1);
+        }
+        .apt-header {
+            background: linear-gradient(135deg, #2b9e8a 0%, #1f7f68 100%);
+            color: white;
+            padding: 40px 32px 32px 32px;
+            position: relative;
+            overflow: hidden;
+        }
+        .apt-header::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -80px;
+            width: 220px;
+            height: 220px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+            animation: float 7s ease-in-out infinite;
+        }
+        .apt-header::after {
+            content: '';
+            position: absolute;
+            bottom: -60px;
+            left: -60px;
+            width: 180px;
+            height: 180px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            animation: float 9s ease-in-out infinite reverse;
+        }
+        @keyframes float {
+            0%,100% { transform: translateY(0px); }
+            50% { transform: translateY(18px); }
+        }
+        .apt-header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin: 0 0 8px 0;
+            letter-spacing: 1px;
+            animation: fadeInDown 0.7s cubic-bezier(.22,1,.36,1);
+        }
+        .apt-header .apt-address {
+            font-size: 16px;
+            opacity: 0.92;
+            margin-bottom: 10px;
+            animation: fadeInDown 0.7s cubic-bezier(.22,1,.36,1) 0.1s backwards;
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .apt-image {
+            width: 100%;
+            height: 480px;
+            max-height: 60vh;
+            object-fit: cover;
+            background: #e0e0e0;
+            display: block;
+            animation: fadeInUp 0.8s cubic-bezier(.22,1,.36,1) 0.2s backwards;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(43,158,138,0.10);
+        }
+        .apt-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 18px;
+            padding: 28px 32px 0 32px;
+        }
+        .feature-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 18px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(43,158,138,0.07);
+            animation: cardFadeIn 0.7s cubic-bezier(.22,1,.36,1) backwards;
+        }
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.2s; }
+        .feature-card:nth-child(3) { animation-delay: 0.3s; }
+        .feature-card:nth-child(4) { animation-delay: 0.4s; }
+        .feature-card:nth-child(5) { animation-delay: 0.5s; }
+        .feature-card:nth-child(6) { animation-delay: 0.6s; }
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .feature-icon {
+            font-size: 28px;
+            color: #2b9e8a;
+            margin-bottom: 8px;
+            transition: color 0.3s;
+        }
+        .feature-card:hover .feature-icon {
+            color: #1f7f68;
+        }
+        .feature-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #223;
+        }
+        .feature-value {
+            font-size: 13px;
+            color: #666;
+        }
+        .apt-details {
+            padding: 32px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 32px;
+        }
+        .apt-info {
+            font-size: 15px;
+            color: #333;
+            animation: fadeInUp 0.8s cubic-bezier(.22,1,.36,1) 0.3s backwards;
+        }
+        .landlord-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 2px 8px rgba(43,158,138,0.07);
+            margin-bottom: 18px;
+            animation: fadeInUp 0.8s cubic-bezier(.22,1,.36,1) 0.4s backwards;
+        }
+        .landlord-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2b9e8a;
+            margin-bottom: 8px;
+        }
+        .landlord-info {
+            font-size: 14px;
+            color: #555;
+        }
+        .apt-map {
+            width: 100%;
+            height: 260px;
+            border-radius: 10px;
+            margin-top: 18px;
+            animation: fadeInUp 0.8s cubic-bezier(.22,1,.36,1) 0.5s backwards;
+        }
+        /* Map placeholder when coords are missing */
+        .map-placeholder {
+            width: 100%;
+            height: 260px;
+            border-radius: 10px;
+            margin-top: 18px;
+            background: linear-gradient(180deg,#f4f7f6,#eef6f4);
+            color: #556;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            border: 1px dashed #dfeee8;
+        }
+
+        /* Fullscreen toggling */
+        .map-wrap { position: relative; }
+        .map-fullscreen-btn {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            z-index: 40;
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(0,0,0,0.06);
+            padding: 6px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            font-weight: 700;
+        }
+
+        .apt-map.fullscreen-active {
+            position: fixed !important;
+            left: 0;
+            top: 0;
+            width: 100vw !important;
+            height: 100vh !important;
+            border-radius: 0 !important;
+            z-index: 10000 !important;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin: 32px 0 0 32px;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #2b9e8a 0%, #1f7f68 100%);
+            color: white;
+            font-weight: 700;
+            border-radius: 8px;
+            text-decoration: none;
+            box-shadow: 0 4px 16px rgba(43,158,138,0.12);
+            transition: all 0.2s;
+            animation: fadeInUp 0.8s cubic-bezier(.22,1,.36,1) 0.6s backwards;
+        }
+        .back-btn:hover {
+            background: linear-gradient(135deg, #1f7f68 0%, #186154 100%);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        .landscape-layout .landscape-main {
+            display: flex;
+            gap: 32px;
+            padding: 0 0 0 0;
+            min-height: 70vh;
+        }
+        .landscape-layout .landscape-left {
+            flex: 1.1;
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .landscape-layout .landscape-right {
+            flex: 1.3;
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        @media (max-width: 900px) {
+            .landscape-layout .landscape-main {
+                flex-direction: column;
+                gap: 18px;
+                padding: 0;
+            }
+            .landscape-layout .landscape-left,
+            .landscape-layout .landscape-right {
+                padding: 12px;
+            }
+            .apt-image {
+                height: 260px;
+                max-height: 40vh;
+            }
+        }
+        @media (max-width: 900px) {
+            .apt-details { grid-template-columns: 1fr; gap: 18px; padding: 24px; }
+            .apt-features { padding: 18px 18px 0 18px; gap: 12px; }
+        }
+        @media (max-width: 600px) {
+            .apt-header { padding: 18px 12px 12px 12px; }
+            .apt-details { padding: 12px; }
+            .apt-features { padding: 12px 12px 0 12px; }
+            .back-btn { margin: 18px 0 0 12px; padding: 10px 18px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="apt-container landscape-layout">
+        <div class="apt-header">
+            <h1>{{ apt.name }}</h1>
+            <div class="apt-address"><i class="fa fa-map-marker"></i> {{ apt.address }}</div>
+        </div>
+        <div class="landscape-main">
+            <div class="landscape-left">
+                {% if apt.image_url %}
+                <img src="{{ apt.image_url }}" alt="Apartment Image" class="apt-image">
+                {% else %}
+                <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80" alt="Apartment" class="apt-image">
+                {% endif %}
+                <div class="apt-features">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa fa-bed"></i></div>
+                        <div class="feature-title">Bedrooms</div>
+                        <div class="feature-value">{{ apt.bedrooms }}</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa fa-bath"></i></div>
+                        <div class="feature-title">Bathrooms</div>
+                        <div class="feature-value">{{ apt.bathrooms }}</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa fa-home"></i></div>
+                        <div class="feature-title">Type</div>
+                        <div class="feature-value">{{ apt.type }}</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa fa-inr"></i></div>
+                        <div class="feature-title">Rent</div>
+                        <div class="feature-value">₹{{ apt.rent }}</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa fa-arrows-alt"></i></div>
+                        <div class="feature-title">Area</div>
+                        <div class="feature-value">{{ apt.area }} sq.ft.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa fa-check-circle"></i></div>
+                        <div class="feature-title">Furnished</div>
+                        <div class="feature-value">{{ apt.furnished|yesno:"Yes,No" }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="landscape-right">
+                <div class="apt-info">
+                    <h3 style="color:#2b9e8a; font-weight:700;">Description</h3>
+                    <p>{{ apt.description }}</p>
+                    <h3 style="color:#2b9e8a; font-weight:700; margin-top:24px;">Amenities</h3>
+                    <ul>
+                        {% for amenity in apt.amenities %}
+                        <li>{{ amenity }}</li>
+                        {% empty %}
+                        <li>No amenities listed.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="landlord-card">
+                    <div class="landlord-title"><i class="fa fa-user"></i> Landlord Info</div>
+                    <div class="landlord-info"><strong>Name:</strong> {{ apt.landlord_name }}</div>
+                    <div class="landlord-info"><strong>Phone:</strong> <a href="tel:{{ apt.landlord_phone }}" style="color:#2b9e8a; text-decoration:none;">{{ apt.landlord_phone }}</a></div>
+                    <div class="landlord-info"><strong>Email:</strong> <a href="mailto:{{ apt.landlord_email }}" style="color:#2b9e8a; text-decoration:none;">{{ apt.landlord_email }}</a></div>
+                </div>
+                <div class="map-wrap">
+                    <div id="apt-map" class="apt-map" data-lat="{{ apt.latitude|default_if_none:'' }}" data-lng="{{ apt.longitude|default_if_none:'' }}" data-name="{{ apt.name|escapejs }}" data-address="{{ apt.address|escapejs }}"></div>
+                    <div id="apt-map-placeholder" class="map-placeholder" style="display:none;">Location not available</div>
+                    <button id="apt-map-fullscreen" class="map-fullscreen-btn" title="Toggle fullscreen">⤢</button>
+                </div>
+            </div>
+        </div>
+        <a href="{% url 'browse_all' %}" class="back-btn"><i class="fa fa-arrow-left"></i> Back to all apartments</a>
+    </div>
+    <script>
+        (function() {
+            var mapEl = document.getElementById('apt-map');
+            var placeholder = document.getElementById('apt-map-placeholder');
+            var fsBtn = document.getElementById('apt-map-fullscreen');
+            if (!mapEl) return;
+            var lat = parseFloat(mapEl.getAttribute('data-lat'));
+            var lng = parseFloat(mapEl.getAttribute('data-lng'));
+            var name = mapEl.getAttribute('data-name') || '';
+            var address = mapEl.getAttribute('data-address') || '';
+
+            var mapInstance = null;
+            function initMap() {
+                try {
+                    mapInstance = L.map('apt-map').setView([lat, lng], 15);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '© OpenStreetMap'
+                    }).addTo(mapInstance);
+                    L.marker([lat, lng]).addTo(mapInstance)
+                        .bindPopup(name + '<br>' + address).openPopup();
+                } catch (err) {
+                    console.error('Map init error:', err);
+                    if (placeholder) placeholder.style.display = 'flex';
+                    mapEl.style.display = 'none';
+                }
+            }
+
+            if (!isNaN(lat) && !isNaN(lng)) {
+                initMap();
+            } else {
+                if (placeholder) placeholder.style.display = 'flex';
+                mapEl.style.display = 'none';
+                fsBtn.style.display = 'none';
+            }
+
+            // Fullscreen toggle
+            if (fsBtn) {
+                fsBtn.addEventListener('click', function() {
+                    var isFull = mapEl.classList.toggle('fullscreen-active');
+                    if (isFull) {
+                        // bring button on top
+                        fsBtn.style.zIndex = 10001;
+                        // ensure map resizes after animation
+                        setTimeout(function() { if (mapInstance) mapInstance.invalidateSize(); }, 300);
+                    } else {
+                        setTimeout(function() { if (mapInstance) mapInstance.invalidateSize(); }, 200);
+                        fsBtn.style.zIndex = '';
+                    }
+                });
+            }
+        })();
+    </script>
+</body>
+</html>

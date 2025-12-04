@@ -1,0 +1,182 @@
+{% extends 'static/static.html' %}
+
+{% block title %}Add Property - ApnaGhar{% endblock %}
+
+{% block links %}
+<style>
+    .add-property-container {
+        background: linear-gradient(135deg, #f5fffe 0%, #f0fdfb 100%);
+        min-height: calc(100vh - 100px);
+        padding: 40px 20px;
+    }
+
+    .add-property-wrapper {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .add-header {
+        text-align: center;
+        margin-bottom: 40px;
+        animation: fadeInDown 0.6s ease;
+    }
+
+    .add-header h1 {
+        font-size: 32px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #2b9e8a, #1f7f68);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0 0 10px 0;
+    }
+
+    .form-card {
+        background: white;
+        border-radius: 16px;
+        padding: 36px;
+        box-shadow: 0 8px 32px rgba(43, 158, 138, 0.08);
+        border: 1px solid #e8f5f3;
+        animation: fadeInUp 0.6s ease;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding: 12px 16px;
+        border: 2px solid #e8f5f3;
+        border-radius: 10px;
+        font-size: 14px;
+        font-family: inherit;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #2b9e8a;
+        box-shadow: 0 0 0 3px rgba(43, 158, 138, 0.1);
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 30px;
+    }
+
+    .btn {
+        flex: 1;
+        padding: 14px 32px;
+        border: none;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+
+    .btn-submit {
+        background: linear-gradient(135deg, #2b9e8a 0%, #1f7f68 100%);
+        color: white;
+        box-shadow: 0 6px 20px rgba(43, 158, 138, 0.2);
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(43, 158, 138, 0.35);
+    }
+
+    .btn-cancel {
+        background: white;
+        color: #2b9e8a;
+        border: 2px solid #2b9e8a;
+    }
+
+    .btn-cancel:hover {
+        background: #f5fffe;
+        transform: translateY(-2px);
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="add-property-container">
+    <div class="add-property-wrapper">
+        <!-- Header -->
+        <div class="add-header">
+            <h1>Add New Property</h1>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Property Name</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <span style="color: #e74c3c; font-size: 12px; margin-top: 4px;">{{ form.name.errors.0 }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.address.id_for_label }}">Address</label>
+                    {{ form.address }}
+                    {% if form.address.errors %}
+                        <span style="color: #e74c3c; font-size: 12px; margin-top: 4px;">{{ form.address.errors.0 }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-submit">
+                        <i class="fa fa-check"></i> Create & Continue
+                    </button>
+                    <a href="{% url 'my_properties' %}" class="btn btn-cancel">
+                        <i class="fa fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

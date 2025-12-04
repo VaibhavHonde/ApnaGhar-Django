@@ -1,0 +1,554 @@
+{% extends 'static/static.html' %}
+{% load static %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'stylesheets/browseall.css' %}">
+    <style>
+        /* Modern browse page styling */
+        body { background: #f5f7fa; }
+
+        .browse-header {
+            background: linear-gradient(135deg, #2b9e8a 0%, #1f7f68 100%);
+            padding: 50px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .browse-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .browse-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(30px); }
+        }
+
+        .browse-header-content {
+            position: relative;
+            z-index: 2;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .browse-header h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .browse-header p {
+            font-size: 18px;
+            opacity: 0.95;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Filter and sorting section */
+        .filters-section {
+            background: white;
+            padding: 30px 20px;
+            margin: 30px auto;
+            max-width: 1200px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(43, 158, 138, 0.1);
+            animation: slideUp 0.8s ease-out 0.2s backwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .filters-section h3 {
+            font-size: 18px;
+            color: #223;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filters-section h3 i {
+            color: #2b9e8a;
+            font-size: 20px;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: #2b9e8a;
+            background: white;
+            box-shadow: 0 6px 16px rgba(43, 158, 138, 0.1);
+        }
+
+        .filter-group select:hover,
+        .filter-group input:hover {
+            border-color: #2b9e8a;
+        }
+
+        .sort-btn {
+            padding: 10px 20px;
+            background: linear-gradient(180deg, #2b9e8a 0%, #1f7f68 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            align-self: flex-end;
+            margin-top: auto;
+        }
+
+        .sort-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(43, 158, 138, 0.2);
+        }
+
+        /* Listings container */
+        .listings-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .listings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Apartment card styling */
+        .apt-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            cursor: pointer;
+            animation: cardFadeIn 0.6s ease-out backwards;
+        }
+
+        .apt-card:nth-child(1) { animation-delay: 0.1s; }
+        .apt-card:nth-child(2) { animation-delay: 0.15s; }
+        .apt-card:nth-child(3) { animation-delay: 0.2s; }
+        .apt-card:nth-child(n+4) { animation-delay: 0.25s; }
+
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .apt-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 40px rgba(43, 158, 138, 0.16);
+        }
+
+        .apt-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #2b9e8a 0%, #1f7f68 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .apt-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .apt-card:hover .apt-image img {
+            transform: scale(1.05);
+        }
+
+        .apt-content {
+            padding: 20px;
+        }
+
+        .apt-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #223;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .apt-address {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .apt-address i {
+            color: #2b9e8a;
+            min-width: 14px;
+        }
+
+        .apt-price {
+            font-size: 22px;
+            font-weight: 800;
+            color: #2b9e8a;
+            margin-bottom: 15px;
+        }
+
+        .apt-price-range {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 15px;
+        }
+
+        .apt-footer {
+            display: flex;
+            gap: 10px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .apt-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #2b9e8a;
+            background: white;
+            color: #2b9e8a;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .apt-btn-primary {
+            background: linear-gradient(180deg, #2b9e8a 0%, #1f7f68 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .apt-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(43, 158, 138, 0.2);
+        }
+
+        .apt-btn-primary:hover {
+            background: linear-gradient(180deg, #1f7f68 0%, #186154 100%);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h2 {
+            font-size: 24px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .browse-header h1 {
+                font-size: 36px;
+            }
+
+            .filters-section {
+                margin: 20px 10px;
+            }
+
+            .listings-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .browse-header {
+                padding: 40px 15px;
+            }
+
+            .browse-header h1 {
+                font-size: 28px;
+            }
+
+            .browse-header p {
+                font-size: 16px;
+            }
+
+            .filters-section {
+                padding: 20px 15px;
+                margin: 15px 10px;
+            }
+
+            .filter-row {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .sort-btn {
+                width: 100%;
+            }
+
+            .listings-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .apt-card {
+                display: flex;
+                overflow: visible;
+            }
+
+            .apt-image {
+                width: 120px;
+                height: 120px;
+                min-width: 120px;
+                border-radius: 8px;
+            }
+
+            .apt-content {
+                padding: 15px;
+            }
+
+            .apt-name {
+                font-size: 16px;
+            }
+
+            .apt-price {
+                font-size: 20px;
+            }
+
+            .apt-footer {
+                flex-direction: column;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block header %}
+<section class="browse-header">
+    <div class="browse-header-content">
+        <h1>Browse All Properties</h1>
+        <p>Find your ideal apartment from our exclusive collection</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<div class="filters-section">
+    <h3><i class="fa fa-sliders"></i> Filter & Sort</h3>
+    <div class="filter-row">
+        <div class="filter-group">
+            <label>Sort By</label>
+            <select id="sortBy" onchange="updateListings()">
+                <option value="newest">Newest</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="name">Name (A-Z)</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>Min Price</label>
+            <input type="number" id="minPrice" placeholder="Min ₹" onchange="updateListings()">
+        </div>
+        <div class="filter-group">
+            <label>Max Price</label>
+            <input type="number" id="maxPrice" placeholder="Max ₹" onchange="updateListings()">
+        </div>
+    </div>
+</div>
+
+<div class="listings-container">
+    <div class="listings-grid" id="aptContainer">
+        <!-- Listings will be dynamically generated here -->
+    </div>
+</div>
+
+<script>
+
+    var names = JSON.parse('{{ names|escapejs }}');
+    var addresses = JSON.parse('{{ addresses|escapejs }}');
+    var ids = JSON.parse('{{ ids|escapejs }}');
+    var mins = JSON.parse('{{ mins|escapejs }}');
+    var maxs = JSON.parse('{{ maxs|escapejs }}');
+    var links = JSON.parse('{{ links|escapejs }}');
+    var imgs = JSON.parse('{{ imgs|escapejs }}');
+    var numbers = JSON.parse('{{ numbers|escapejs }}');
+
+    function updateListings() {
+        var container = document.getElementById('aptContainer');
+        var sortBy = document.getElementById('sortBy').value;
+        var minPrice = parseInt(document.getElementById('minPrice').value) || 0;
+        var maxPrice = parseInt(document.getElementById('maxPrice').value) || Infinity;
+
+        var aptArray = [];
+        for (var i = 0; i < names.length; i++) {
+            aptArray.push({
+                index: i,
+                name: names[i],
+                address: addresses[i],
+                id: ids[i],
+                min: parseInt(mins[i]),
+                max: parseInt(maxs[i]),
+                link: links[i],
+                img: imgs[i],
+                number: numbers[i]
+            });
+        }
+
+        // Filter by price
+        aptArray = aptArray.filter(apt => apt.min >= minPrice && apt.max <= maxPrice);
+
+        // Sort
+        if (sortBy === 'price-low') {
+            aptArray.sort((a, b) => a.min - b.min);
+        } else if (sortBy === 'price-high') {
+            aptArray.sort((a, b) => b.max - a.max);
+        } else if (sortBy === 'name') {
+            aptArray.sort((a, b) => a.name.localeCompare(b.name));
+        }
+
+        // Render
+        container.innerHTML = '';
+        if (aptArray.length === 0) {
+            container.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;"><i class="fa fa-search"></i><h2>No properties found</h2><p>Try adjusting your filters</p></div>';
+        } else {
+            aptArray.forEach(apt => {
+                var card = document.createElement('div');
+                card.className = 'apt-card';
+                card.innerHTML = `
+                    <div class="apt-image">
+                        <i class="fa fa-image"></i>
+                    </div>
+                    <div class="apt-content">
+                        <div class="apt-name">${apt.name}</div>
+                        <div class="apt-address"><i class="fa fa-map-marker"></i> ${apt.address}</div>
+                        <div class="apt-price">₹${apt.min.toLocaleString()}</div>
+                        <div class="apt-price-range">to ₹${apt.max.toLocaleString()}/month</div>
+                        <div class="apt-footer">
+                            <a href="/view/${apt.id}/" class="apt-btn apt-btn-primary"><i class="fa fa-eye"></i> View</a>
+                            <a href="tel:${apt.number}" class="apt-btn"><i class="fa fa-phone"></i> Call</a>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', updateListings);
+</script>
+{% endblock %}
+

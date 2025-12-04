@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}ApnaGhar{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    {% block links %}{% endblock %}
+    <style>
+        /* Brand styling */
+        .brand {
+            font-weight: 800;
+            font-size: 18px;
+            color: #ffffff;
+            background: linear-gradient(90deg,#3bb79c,#2b9e8a);
+            padding: 8px 12px;
+            border-radius: 6px;
+            box-shadow: 0 6px 18px rgba(43,158,138,0.16);
+            display: inline-block;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .brand:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(43,158,138,0.24);
+        }
+
+        /* Navigation Bar Styling */
+        .navbar-container {
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            padding: 10px 18px;
+            border: none;
+            background: transparent;
+            color: #2b9e8a;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 6px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            background: #f0f0f0;
+            color: #1f7f68;
+        }
+
+        .nav-btn-primary {
+            background: linear-gradient(135deg, #2b9e8a 0%, #1f7f68 100%);
+            color: white;
+            padding: 10px 22px;
+        }
+
+        .nav-btn-primary:hover {
+            background: linear-gradient(135deg, #1f7f68 0%, #186154 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(43, 158, 138, 0.2);
+        }
+
+        .nav-divider {
+            width: 1px;
+            height: 24px;
+            background: #e0e0e0;
+        }
+
+        /* Profile dropdown */
+        .profile-menu {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-btn {
+            background: transparent;
+            border: none;
+            color: #2b9e8a;
+            font-size: 15px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border-radius: 8px;
+        }
+
+        .profile-btn:hover { background: #f7f7f7; color: #1f7f68; }
+
+        .profile-dropdown {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 8px);
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            display: none;
+            min-width: 160px;
+            z-index: 10002;
+        }
+
+        .profile-menu.open .profile-dropdown { display: block; }
+
+        .profile-dropdown a { display: block; padding: 10px 12px; color: #333; text-decoration: none; }
+        .profile-dropdown a:hover { background: #f5f5f5; }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #2b9e8a;
+            cursor: pointer;
+        }
+
+        .nav-right.active {
+            display: flex;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar-container {
+                padding: 12px 15px;
+            }
+
+            .nav-right {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                left: 0;
+                flex-direction: column;
+                background: white;
+                padding: 15px;
+                gap: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .nav-right.active {
+                max-height: 400px;
+            }
+
+            .nav-right .nav-btn {
+                width: 100%;
+                justify-content: flex-start;
+                padding: 12px 15px;
+                border-radius: 0;
+            }
+
+            .nav-right .nav-divider {
+                height: 1px;
+                width: 100%;
+                margin: 8px 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .nav-right .nav-btn-primary {
+                background: linear-gradient(135deg, #2b9e8a 0%, #1f7f68 100%);
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-container {
+                padding: 10px;
+            }
+
+            .brand {
+                font-size: 16px;
+                padding: 6px 10px;
+            }
+
+            .nav-left {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body class="w3-light-grey">
+    <!-- Navigation Bar -->
+    <div class="navbar-container">
+        <!-- Left Side -->
+        <div class="nav-left">
+            <a href="{% url 'index' %}" class="brand"><i class="fa fa-home"></i>ApnaGhar</a>
+        </div>
+
+        <!-- Right Side -->
+        <button class="menu-toggle" onclick="toggleMenu()">
+            <i class="fa fa-bars"></i>
+        </button>
+
+        <div class="nav-right" id="navMenu">
+            <a href="{% url 'browse_all' %}" class="nav-btn"><i class="fa fa-list"></i> Browse Properties</a>
+                        <a href="{% url 'index' %}#about-section" class="nav-btn"><i class="fa fa-info-circle"></i> About Us</a>
+                        <a href="{% url 'index' %}#contact-section" class="nav-btn"><i class="fa fa-envelope"></i> Contact Us</a>
+            <div class="nav-divider"></div>
+
+            {% if user.is_authenticated %}
+                <div class="profile-menu">
+                    <button class="profile-btn" id="profileButton" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-user-circle" style="font-size:20px;"></i>
+                        <span style="display:none;">Profile</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+    <a href="{% url 'profile' %}" class="nav-btn">My Profile</a>
+    
+    <form action="{% url 'logout' %}" method="post" style="margin: 0;">
+        {% csrf_token %}
+        <button type="submit" class="nav-btn" style="width: 100%; justify-content: flex-start; border-radius: 0;">
+            Logout
+        </button>
+    </form>
+</div>
+                </div>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-btn"><i class="fa fa-sign-in"></i> Login</a>
+                <a href="{% url 'signup' %}" class="nav-btn nav-btn-primary"><i class="fa fa-user-plus"></i> Sign Up</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Header Block-->
+    {% block header %}{% endblock %}
+
+    <!-- Content Block -->
+    {% block content %}{% endblock %}
+
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById('navMenu');
+            menu.classList.toggle('active');
+        }
+
+        // Close menu when clicking on a nav item
+        document.querySelectorAll('.nav-right .nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.getElementById('navMenu').classList.remove('active');
+            });
+        });
+
+        // Profile dropdown toggle
+        (function() {
+            var profileBtn = document.getElementById('profileButton');
+            var profileMenu = document.querySelector('.profile-menu');
+            var profileDropdown = document.getElementById('profileDropdown');
+            if (!profileBtn) return;
+
+            profileBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var isOpen = profileMenu.classList.toggle('open');
+                profileBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            });
+
+            // Close dropdown when clicking elsewhere
+            document.addEventListener('click', function() {
+                if (profileMenu.classList.contains('open')) {
+                    profileMenu.classList.remove('open');
+                    profileBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            // Close the mobile nav when clicking dropdown links
+            document.querySelectorAll('.profile-dropdown .nav-btn').forEach(link => {
+                link.addEventListener('click', function() {
+                    document.getElementById('navMenu').classList.remove('active');
+                });
+            });
+        })();
+
+        // Smooth-scroll helper: scroll to an element by hash if present
+        function smoothScrollToHash(hash) {
+            if (!hash) return;
+            try {
+                var el = document.querySelector(hash);
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            } catch (err) {
+                // invalid selector or not present
+            }
+        }
+
+        // Attach click handlers for anchors that include hashes.
+        // If the link is a same-page hash ("#foo"), intercept and smooth-scroll.
+        // If the link resolves to the current pathname with a hash, intercept and smooth-scroll.
+        document.querySelectorAll('a[href*="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                var href = this.getAttribute('href');
+                if (!href) return;
+
+                // Case 1: pure fragment link like "#about-section"
+                if (href.charAt(0) === '#') {
+                    e.preventDefault();
+                    smoothScrollToHash(href);
+                    history.pushState(null, '', href);
+                    document.getElementById('navMenu').classList.remove('active');
+                    return;
+                }
+
+                // Case 2: full URL (or absolute path) that contains a hash
+                try {
+                    var url = new URL(href, window.location.origin);
+                    if (url.hash && url.pathname === window.location.pathname) {
+                        // same page link with full path + hash
+                        e.preventDefault();
+                        smoothScrollToHash(url.hash);
+                        history.pushState(null, '', url.hash);
+                        document.getElementById('navMenu').classList.remove('active');
+                    }
+                    // If the link points to another page (different pathname), allow navigation.
+                } catch (err) {
+                    // ignore if URL parsing fails
+                }
+            });
+        });
+
+        // On page load, if an anchor/hash is present in the URL, perform a smooth scroll.
+        window.addEventListener('load', function() {
+            if (window.location.hash) {
+                // small timeout to allow page rendering
+                setTimeout(function() { smoothScrollToHash(window.location.hash); }, 80);
+            }
+        });
+    </script>
+</body>
+</html>
