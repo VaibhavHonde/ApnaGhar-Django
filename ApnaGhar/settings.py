@@ -49,7 +49,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'AptDB.urls'
+ROOT_URLCONF = 'ApnaGhar.urls'
 
 TEMPLATES = [
     {
@@ -67,7 +67,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'AptDB.wsgi.application'
+WSGI_APPLICATION = 'ApnaGhar.wsgi.application'
 
 
 # Database
